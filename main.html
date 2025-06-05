@@ -7,29 +7,38 @@
 <body>
 
   <h2>Async Message Display</h2>
-  
-  <input type="text" id="text" placeholder="Enter message" />
-  <input type="number" id="delay" placeholder="Enter delay in ms" />
-  <button id="btn">Submit</button>
+
+  <!-- ✅ Added form tag -->
+  <form id="messageForm">
+    <input type="text" id="text" placeholder="Enter message" />
+    <input type="number" id="delay" placeholder="Enter delay in ms" />
+    <button type="submit" id="btn">Submit</button>
+  </form>
 
   <div id="output" style="margin-top: 20px; font-weight: bold;"></div>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("messageForm");
       const textInput = document.getElementById("text");
       const delayInput = document.getElementById("delay");
-      const button = document.getElementById("btn");
       const output = document.getElementById("output");
 
       function wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
       }
 
-      async function showMessage() {
+      async function showMessage(message, delay) {
+        output.textContent = ""; // Clear previous output
+        await wait(delay);
+        output.textContent = message;
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault(); // Prevent form from refreshing the page
+
         const message = textInput.value.trim();
         const delay = parseInt(delayInput.value);
-
-        output.textContent = ""; // Clear previous output
 
         if (!message) {
           output.textContent = "Please enter a message.";
@@ -41,13 +50,7 @@
           return;
         }
 
-        await wait(delay);
-        output.textContent = message;
-      }
-
-      button.addEventListener("click", (e) => {
-        e.preventDefault();
-        showMessage();
+        await showMessage(message, delay);
       });
     });
   </script>
