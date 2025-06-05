@@ -1,20 +1,56 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Async Message with Timeout</title>
+</head>
+<body>
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+  <h2>Async Message Display</h2>
+  
+  <input type="text" id="text" placeholder="Enter message" />
+  <input type="number" id="delay" placeholder="Enter delay in ms" />
+  <button id="btn">Submit</button>
 
-  <body>
-    <!-- the entire body must be written by student -->
-    <form onsubmit="return false">
-      <input type="text" id="text" placeholder="Text" />
-      <input type="number" id="delay" placeholder="Delay" />
-      <button type="button" id="btn">Submit</button>
-    </form>
+  <div id="output" style="margin-top: 20px; font-weight: bold;"></div>
 
-    <div id="output"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const textInput = document.getElementById("text");
+      const delayInput = document.getElementById("delay");
+      const button = document.getElementById("btn");
+      const output = document.getElementById("output");
 
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+      function wait(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+
+      async function showMessage() {
+        const message = textInput.value.trim();
+        const delay = parseInt(delayInput.value);
+
+        output.textContent = ""; // Clear previous output
+
+        if (!message) {
+          output.textContent = "Please enter a message.";
+          return;
+        }
+
+        if (isNaN(delay) || delay < 0) {
+          output.textContent = "Please enter a valid delay (positive number).";
+          return;
+        }
+
+        await wait(delay);
+        output.textContent = message;
+      }
+
+      button.addEventListener("click", (e) => {
+        e.preventDefault();
+        showMessage();
+      });
+    });
+  </script>
+
+</body>
 </html>
